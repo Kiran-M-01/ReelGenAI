@@ -1,10 +1,19 @@
 #this file will look for new folders inside the user_uploads folder and converts them to reel if they are not already converted
+import os
 def text_to_audio(folder):
-    pass
+    print("TTA - ",folder)
 def create_reel(folder):
-    pass
+    print("CR - ",folder)
 
 if __name__ == "__main__":
-    folder = '23....'
-    text_to_audio(folder)
-    create_reel(folder)
+    with open("done.txt", "r") as f:
+        done_folders = f.readlines()
+
+    done_folders = [f.strip() for f in done_folders]
+    folders = os.listdir("user_uploads")
+    for folder in folders:
+        if(folder not in done_folders):
+            text_to_audio(folder)
+            create_reel(folder)
+            with open("done.txt", "a") as f:
+                f.write(folder + "\n")
