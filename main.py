@@ -14,28 +14,29 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def home():
     return render_template("index.html")
 
-@app.route("/create",methods=["GET","POST"])
+@app.route("/create", methods=["GET", "POST"])
 def create():
     myid = uuid.uuid1()
+
     if request.method == "POST":
-        print(request.files.keys())
         rec_id = request.form.get("uuid")
         desc = request.form.get("text")
-        for key,value in request.files.items():
-            print(key,value)
 
-            # UPLOAD THE FILES
-            file = request.files[key]
-            if file:
+        folder_path = os.path.join(app.config['UPLOAD_FOLDER'], rec_id)
+        os.makedirs(folder_path, exist_ok=True)
+
+        # Save description once
+        with open(os.path.join(folder_path, "desc.txt"), "w", encoding="utf-8") as f:
+            f.write(desc)
+
+        # Save files
+        for key, file in request.files.items():
+            if file and file.filename:
                 filename = secure_filename(file.filename)
-                if(not(os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], rec_id)))):
-                    os.mkdir(os.path.join(app.config['UPLOAD_FOLDER'], rec_id))
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, filename))
+                file.save(os.path.join(folder_path, filename))
 
-            with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, "desc.txt"),"w") as f:
-                f.write(desc)
+        print("Description saved:", desc)
 
-               
     return render_template("create.html", myid=myid)
 
 @app.route("/gallery")

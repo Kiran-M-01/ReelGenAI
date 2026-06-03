@@ -47,4 +47,4 @@ def text_to_speech_file(text: str, folder: str) -> str:
     # Return the path of the saved audio file
     return save_file_path
 
-text_to_speech_file("hi this is a sample audio for the project", "3ada90c7-47e9-11f1-acb4-8019346fdefb")
+# text_to_speech_file("hi this is a sample audio for the project", "3ada90c7-47e9-11f1-acb4-8019346fdefb")
