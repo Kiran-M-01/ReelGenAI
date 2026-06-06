@@ -21,6 +21,7 @@ def create():
     if request.method == "POST":
         rec_id = request.form.get("uuid")
         desc = request.form.get("text")
+        input_files = []
 
         folder_path = os.path.join(app.config['UPLOAD_FOLDER'], rec_id)
         os.makedirs(folder_path, exist_ok=True)
@@ -34,6 +35,15 @@ def create():
             if file and file.filename:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(folder_path, filename))
+                input_files.append(file.filename)
+
+            #SOMETHINGS MISSING
+        
+        for fl in input_files:
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, "input.txt"), "a") as f:
+                f.write(f"file '{fl}'\nduration 1\n")
+
+
 
         print("Description saved:", desc)
 
