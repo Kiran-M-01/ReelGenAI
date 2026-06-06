@@ -1,4 +1,0 @@
-file 'user_uploads/5a431076-6192-11f1-9347-8019346fdefb/wallpapere5.jpg'
-duration 1
-file 'user_uploads/5a431076-6192-11f1-9347-8019346fdefb/wallpapere1.jpg'
-duration 1

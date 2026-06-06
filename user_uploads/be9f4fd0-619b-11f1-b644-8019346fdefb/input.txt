@@ -1,0 +1,8 @@
+file 'wallpapere2.jpg'
+duration 1
+file 'wallpapere3.jpg'
+duration 1
+file 'wallpapere1.jpg'
+duration 1
+file 'wallpapere4.jpg'
+duration 1
