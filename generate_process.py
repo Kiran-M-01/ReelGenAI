@@ -41,3 +41,5 @@ if __name__ == "__main__":
                 with open("done.txt", "a") as f:
                         f.write(folder + "\n")
         time.sleep(4)
+
+        
