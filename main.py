@@ -10,7 +10,13 @@ UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reelgen.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
 
 
 @app.route("/")
@@ -24,6 +30,16 @@ def create():
     if request.method == "POST":
         rec_id = request.form.get("uuid")
         desc = request.form.get("text")
+
+        job = Job(
+            uuid=rec_id,
+            description=desc,
+            status="queued"
+        )
+
+        db.session.add(job)
+        db.session.commit()
+
         input_files = []
 
         folder_path = os.path.join(app.config['UPLOAD_FOLDER'], rec_id)
@@ -57,5 +73,25 @@ def gallery():
     reels = os.listdir("static/reels")
     print(reels)
     return render_template("gallery.html", reels=reels)
+
+with app.app_context():
+    db.create_all()
+
+@app.route("/jobs")
+def jobs():
+
+    jobs = Job.query.all()
+
+    result = []
+
+    for job in jobs:
+        result.append({
+            "id": job.id,
+            "uuid": job.uuid,
+            "description": job.description,
+            "status": job.status
+        })
+
+    return result
 
 app.run(debug=True)
