@@ -94,4 +94,9 @@ def jobs():
 
     return result
 
+@app.route("/dashboard")
+def dashboard():
+    jobs = Job.query.all()
+    return render_template("dashboard.html", jobs=jobs)
+
 app.run(debug=True)

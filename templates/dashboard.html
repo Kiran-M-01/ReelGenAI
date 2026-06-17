@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h1>Reel Jobs</h1>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Status</th>
+    </tr>
+
+    {% for job in jobs %}
+    <tr>
+        <td>{{ job.id }}</td>
+        <td>{{ job.description }}</td>
+        <td>{{ job.status }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>
