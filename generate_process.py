@@ -37,6 +37,17 @@ if __name__ == "__main__":
 
                 text_to_audio(folder)
                 create_reel(folder)
+                
+                from models import Job
+                from database import db
+                from main import app
+
+                with app.app_context():
+                    job = Job.query.filter_by(uuid=folder).first()
+
+                    if job:
+                        job.status = "completed"
+                        db.session.commit()
 
                 with open("done.txt", "a") as f:
                         f.write(folder + "\n")
