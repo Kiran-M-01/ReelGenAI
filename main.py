@@ -3,6 +3,9 @@ import uuid
 from werkzeug.utils import secure_filename
 import os
 
+from database import db
+from models import Job
+
 UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
