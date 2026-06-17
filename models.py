@@ -1,6 +1,8 @@
 from database import db
+from datetime import datetime
 
 class Job(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
 
     uuid = db.Column(db.String(100), unique=True)
@@ -11,5 +13,7 @@ class Job(db.Model):
 
     output_video = db.Column(db.String(255))
 
-    def __repr__(self):
-        return f"<Job {self.id}>"
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
