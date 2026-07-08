@@ -3,8 +3,11 @@ import uuid
 from werkzeug.utils import secure_filename
 import os
 
+from werkzeug.security import generate_password_hash
+
 from database import db
 from models import Job
+from auth_db import create_user
 
 UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -35,9 +38,14 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
 
+        password_hash = generate_password_hash(password)
+
+        create_user(username, email, password_hash)
+        return "Registration Successful"
+
         print(username)
         print(email)
-        print(password)
+        print(password_hash)
 
         return "Recieved Successfully"
 
