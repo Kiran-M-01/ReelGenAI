@@ -7,12 +7,19 @@ from werkzeug.security import generate_password_hash
 
 from database import db
 from models import Job
-from auth_db import create_user
+from auth_db import (
+    create_users_table,
+    create_user,
+    get_user_by_email,
+    get_user_by_username
+)
+
 
 UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
+create_users_table()
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -38,16 +45,25 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
 
+        if not username or not email or not password:
+            return "All fields are required"
+
+        if get_user_by_username(username):
+            return "Username already exists"
+
+        if get_user_by_email(email):
+            return "Email already registered"
+
         password_hash = generate_password_hash(password)
 
         create_user(username, email, password_hash)
         return "Registration Successful"
 
-        print(username)
-        print(email)
-        print(password_hash)
+        # print(username)
+        # print(email)
+        # print(password_hash)
 
-        return "Recieved Successfully"
+        # return "Recieved Successfully"
 
 
 
@@ -130,4 +146,5 @@ def dashboard():
 
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
