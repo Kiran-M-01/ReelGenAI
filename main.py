@@ -23,6 +23,15 @@ db.init_app(app)
 def home():
     return render_template("index.html")
 
+
+@app.route("/register", methods=["GET","POST"])
+def register():
+    if request.method == "GET":
+        return render_template("register.html")
+
+
+
+
 @app.route("/create", methods=["GET", "POST"])
 def create():
     myid = uuid.uuid1()
@@ -98,5 +107,7 @@ def jobs():
 def dashboard():
     jobs = Job.query.all()
     return render_template("dashboard.html", jobs=jobs)
+
+
 
 app.run(debug=True)
