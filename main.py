@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 import uuid
 from werkzeug.utils import secure_filename
 import os
 
-from werkzeug.security import generate_password_hash
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 from database import db
 from models import Job
@@ -19,6 +22,7 @@ UPLOAD_FOLDER = 'user_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
+app.secret_key = "your_secret_key"
 create_users_table()
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -65,6 +69,25 @@ def register():
 
         # return "Recieved Successfully"
 
+
+@app.route("/login", methods = ["GET","POST"])
+def login():
+    if request.method == "GET":
+        return render_template('login.html')
+    
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = get_user_by_email(email)
+        if user is None:
+            return "Invalid Email"
+        
+        if not check_password_hash(user[3], password):
+            return "Invalid Password"
+        
+
+        return "LogIn Successfull"
 
 
 
