@@ -23,6 +23,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
+
 create_users_table()
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -86,13 +87,18 @@ def login():
         if not check_password_hash(user[3], password):
             return "Invalid Password"
         
+        session["user_id"] = user[0]
 
-        return "LogIn Successfull"
+        return redirect(url_for("dashboard"))
 
 
 
 @app.route("/create", methods=["GET", "POST"])
 def create():
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
     myid = uuid.uuid1()
 
     if request.method == "POST":
@@ -148,6 +154,9 @@ with app.app_context():
 @app.route("/jobs")
 def jobs():
 
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
     jobs = Job.query.all()
 
     result = []
@@ -164,8 +173,24 @@ def jobs():
 
 @app.route("/dashboard")
 def dashboard():
+
+    print(session)
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
     jobs = Job.query.all()
+
     return render_template("dashboard.html", jobs=jobs)
+
+
+@app.route("/logout")
+def logout():
+
+    session.pop("user_id", None)
+
+    return redirect(url_for("login"))
+    
 
 
 
