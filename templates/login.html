@@ -1,16 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #6366f1;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        }
+
+        html, body { height: 100%; margin: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.35;
+            z-index: 0;
+        }
+        body::before { background: #6366f1; top: -150px; left: -150px; }
+        body::after  { background: #ec4899; bottom: -150px; right: -150px; }
+
+        form {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            padding: 40px 36px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-align: center;
+        }
+
+        form::before {
+            content: "Welcome back — please sign in to continue.";
+            display: block;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: -4px;
+            margin-bottom: 28px;
+            order: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-top: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text);
+            background: #f8fafc;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+
+        input:hover { background: #f1f5f9; }
+
+        input:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        br { display: none; }
+
+        button {
+            margin-top: 28px;
+            width: 100%;
+            padding: 13px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #fff;
+            background: var(--primary);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.05s, box-shadow 0.15s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+        }
+
+        button:active { transform: translateY(1px); }
+
+        @media (max-width: 480px) {
+            form { padding: 32px 24px; border-radius: 16px; }
+            h1 { font-size: 24px; }
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Log In</h1>
-
     <form method="POST">
-
-        <label>Username</label><br>
-        <input type="text" name="username"><br><br>
+        {% if error %}
+        <p style="color:red; text-align:center; margin-bottom:15px;">{{ error }}</p>
+        {% endif %}
+        <h1>Log In</h1>
 
         <label>Email</label><br>
         <input type="email" name="email"><br><br>

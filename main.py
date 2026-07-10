@@ -42,7 +42,7 @@ def home():
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template("register.html", error=None)
     
     if request.method == "POST":
 
@@ -54,15 +54,15 @@ def register():
             return "All fields are required"
 
         if get_user_by_username(username):
-            return "Username already exists"
+            return render_template("register.html",error="Username already exists")
 
         if get_user_by_email(email):
-            return "Email already registered"
+            return render_template("register.html",error="Email already registered")
 
         password_hash = generate_password_hash(password)
 
         create_user(username, email, password_hash)
-        return "Registration Successful"
+        return render_template("register.html", error="Registration Successful")
 
         # print(username)
         # print(email)
@@ -74,7 +74,7 @@ def register():
 @app.route("/login", methods = ["GET","POST"])
 def login():
     if request.method == "GET":
-        return render_template('login.html')
+        return render_template('login.html', error=None)
     
     if request.method == "POST":
         email = request.form.get("email")
@@ -82,10 +82,10 @@ def login():
 
         user = get_user_by_email(email)
         if user is None:
-            return "Invalid Email"
+            return render_template("login.html",error="Invalid Email")
         
         if not check_password_hash(user[3], password):
-            return "Invalid Password"
+            return render_template("login.html",error="Invalid Password")
         
         session["user_id"] = user[0]
 
@@ -142,6 +142,8 @@ def create():
 
     return render_template("create.html", myid=myid)
 
+
+
 @app.route("/gallery")
 def gallery():
     reels = os.listdir("static/reels")
@@ -150,6 +152,8 @@ def gallery():
 
 with app.app_context():
     db.create_all()
+
+
 
 @app.route("/jobs")
 def jobs():
