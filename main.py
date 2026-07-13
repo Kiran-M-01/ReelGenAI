@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 import uuid
 from werkzeug.utils import secure_filename
 import os
+from PIL import Image
 
 from werkzeug.security import (
     generate_password_hash,
@@ -19,7 +20,13 @@ from auth_db import (
 
 
 UPLOAD_FOLDER = 'user_uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {
+    "png",
+    "jpg",
+    "jpeg",
+    "jfif",
+    "webp"
+}
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
@@ -128,8 +135,29 @@ def create():
         for key, file in request.files.items():
             if file and file.filename:
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(folder_path, filename))
-                input_files.append(file.filename)
+
+                extension = filename.rsplit(".", 1)[1].lower()
+
+                save_path = os.path.join(folder_path, filename)
+
+                file.save(save_path)
+
+                if extension in ["jfif", "webp"]:
+
+                    new_filename = filename.rsplit(".", 1)[0] + ".jpg"
+
+                    new_path = os.path.join(folder_path, new_filename)
+
+                    image = Image.open(save_path).convert("RGB")
+                    image.save(new_path, "JPEG")
+
+                    os.remove(save_path)
+
+                    input_files.append(new_filename)
+
+                else:
+
+                    input_files.append(filename)
 
             #SOMETHINGS MISSING
         
