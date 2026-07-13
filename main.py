@@ -106,6 +106,7 @@ def create():
         desc = request.form.get("text")
 
         job = Job(
+            user_id=session["user_id"],
             uuid=rec_id,
             description=desc,
             status="queued"
@@ -161,7 +162,9 @@ def jobs():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    jobs = Job.query.all()
+    jobs = Job.query.filter_by(
+    user_id=session["user_id"]
+    ).all()
 
     result = []
 
@@ -183,7 +186,9 @@ def dashboard():
     if "user_id" not in session:
         return redirect(url_for("login"))
     
-    jobs = Job.query.all()
+    jobs = Job.query.filter_by(
+    user_id=session["user_id"]
+    ).all()
 
     return render_template("dashboard.html", jobs=jobs)
 

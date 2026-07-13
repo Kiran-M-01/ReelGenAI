@@ -1,30 +1,511 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Reel AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #07070d;
+            --bg-2: #0d0d18;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface-hover: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.14);
+            --text: #f5f5fa;
+            --text-dim: #a1a1b3;
+            --text-mute: #6b6b80;
+            --brand-1: #6366f1;
+            --brand-2: #8b5cf6;
+            --brand-3: #ec4899;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            --shadow-glow: 0 20px 60px -20px rgba(139, 92, 246, 0.5);
+        }
+
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background orbs */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.35;
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: #6366f1;
+            top: -150px; left: -150px;
+            animation: float 18s ease-in-out infinite;
+        }
+        body::after {
+            width: 600px; height: 600px;
+            background: #ec4899;
+            bottom: -200px; right: -200px;
+            animation: float 22s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -40px) scale(1.1); }
+        }
+
+        /* Navigation */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(7, 7, 13, 0.65);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .logo-mark {
+            width: 32px; height: 32px;
+            border-radius: 9px;
+            background: var(--gradient);
+            display: grid; place-items: center;
+            box-shadow: 0 8px 24px -8px rgba(139, 92, 246, 0.7);
+        }
+        .logo-mark svg { width: 18px; height: 18px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+        }
+        .nav-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all .2s ease;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--surface); }
+        .nav-links a.active {
+            color: var(--text);
+            background: var(--surface);
+            box-shadow: inset 0 0 0 1px var(--border-strong);
+        }
+        .nav-links a.logout { color: #ff8a8a; }
+        .nav-links a.logout:hover { background: rgba(255, 100, 100, 0.1); }
+
+        .menu-btn {
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 28px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header { margin-bottom: 36px; animation: fadeUp .6s ease both; }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        h1.title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+        h1.title span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: var(--text-dim); font-size: 16px; max-width: 620px; }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 32px 0 40px;
+            animation: fadeUp .7s ease both;
+        }
+        .stat-card {
+            padding: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            transition: transform .25s ease, border-color .25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--border-strong); }
+        .stat-card .label { font-size: 12px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+        .stat-card .value { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; margin-top: 8px; letter-spacing: -0.02em; }
+        .stat-card .icon {
+            position: absolute;
+            top: 16px; right: 16px;
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: grid; place-items: center;
+            background: rgba(139, 92, 246, 0.15);
+            color: #b8a4ff;
+        }
+        .stat-card .icon svg { width: 18px; height: 18px; }
+
+        /* Section title */
+        .section-head {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px; gap: 16px; flex-wrap: wrap;
+        }
+        .section-head h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px; font-weight: 600; letter-spacing: -0.01em;
+        }
+
+        /* Table card */
+        .table-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            animation: fadeUp .8s ease both;
+        }
+        .table-wrap { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        thead th {
+            text-align: left;
+            padding: 16px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-mute);
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+            vertical-align: middle;
+        }
+        tbody tr { transition: background .2s ease; }
+        tbody tr:hover { background: var(--surface-hover); }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody td:first-child {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--text);
+        }
+        tbody td:nth-child(2) { color: var(--text); max-width: 420px; }
+
+        /* Status badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+            border: 1px solid transparent;
+        }
+        .badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 8px currentColor;
+        }
+        .badge-queued    { color: #fbbf24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.25); }
+        .badge-processing{ color: #60a5fa; background: rgba(96, 165, 250, 0.12); border-color: rgba(96, 165, 250, 0.25); }
+        .badge-completed { color: #34d399; background: rgba(52, 211, 153, 0.12); border-color: rgba(52, 211, 153, 0.25); }
+        .badge-failed    { color: #f87171; background: rgba(248, 113, 113, 0.12); border-color: rgba(248, 113, 113, 0.25); }
+        .badge-processing::before { animation: pulse 1.4s ease-in-out infinite; }
+        @keyframes pulse { 50% { opacity: 0.35; } }
+
+        /* Empty state */
+        .empty {
+            padding: 80px 24px;
+            text-align: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            animation: fadeUp .7s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+        .empty::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center top, rgba(139, 92, 246, 0.18), transparent 60%);
+            pointer-events: none;
+        }
+        .empty-icon {
+            position: relative;
+            width: 120px; height: 120px;
+            margin: 0 auto 28px;
+            border-radius: 28px;
+            background: var(--gradient);
+            display: grid; place-items: center;
+            font-size: 56px;
+            box-shadow: var(--shadow-glow);
+            animation: bob 4s ease-in-out infinite;
+        }
+        @keyframes bob { 50% { transform: translateY(-8px); } }
+        .empty h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .empty p {
+            color: var(--text-dim);
+            max-width: 440px;
+            margin: 0 auto 32px;
+            position: relative;
+        }
+        .empty-actions {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+            position: relative;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.6);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -12px rgba(139, 92, 246, 0.8); }
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border-color: var(--border-strong);
+        }
+        .btn-secondary:hover { background: var(--surface-hover); transform: translateY(-2px); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0;
+                flex-direction: column; align-items: stretch; gap: 4px;
+                padding: 12px; background: rgba(7,7,13,0.95); backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .menu-btn { display: inline-flex; }
+            .container { padding: 28px 18px 60px; }
+            tbody td:nth-child(2) { max-width: 220px; }
+        }
+    </style>
 </head>
 <body>
 
-<h1>Reel Jobs</h1>
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="{{ url_for('dashboard') if 'dashboard' in url_for.__globals__.get('current_app', {}).view_functions|default({}) else '#' }}" class="logo">
+            <span class="logo-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </span>
+            Reel AI
+        </a>
 
-<table border="1">
-    <tr>
-    <th>ID</th>
-    <th>Description</th>
-    <th>Status</th>
-    <th>Created</th>
-</tr>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{{ url_for('dashboard') }}" class="active">Dashboard</a></li>
+            <li><a href="{{ url_for('create') }}">Create Reel</a></li>
+            <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout">Logout</a></li>
+        </ul>
 
-    {% for job in jobs %}
-    <tr>
-    <td>{{ job.id }}</td>
-    <td>{{ job.description }}</td>
-    <td>{{ job.status }}</td>
-    <td>{{ job.created_at }}</td>
-    </tr>
-    {% endfor %}
+        <button class="menu-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+    </div>
+</nav>
 
-</table>
+<main class="container">
+    <header class="header">
+        <div class="eyebrow"><span class="dot"></span> All systems operational</div>
+        <h1 class="title">Your <span>Reel Jobs</span></h1>
+        <p class="subtitle">Track your AI-powered reel generations in real time. Monitor status, review results, and launch new creations from a single command center.</p>
+    </header>
+
+    {% if jobs %}
+
+    <section class="stats">
+        <div class="stat-card">
+            <div class="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+            </div>
+            <div class="label">Total Jobs</div>
+            <div class="value">{{ jobs|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon" style="background: rgba(52, 211, 153, 0.15); color:#6ee7b7;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="label">Completed</div>
+            <div class="value">{{ jobs|selectattr('status','equalto','completed')|list|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon" style="background: rgba(96, 165, 250, 0.15); color:#93c5fd;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/></svg>
+            </div>
+            <div class="label">Processing</div>
+            <div class="value">{{ jobs|selectattr('status','equalto','processing')|list|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon" style="background: rgba(251, 191, 36, 0.15); color:#fcd34d;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="label">Queued</div>
+            <div class="value">{{ jobs|selectattr('status','equalto','queued')|list|length }}</div>
+        </div>
+    </section>
+
+    <div class="section-head">
+        <h2>Recent Jobs</h2>
+        <a href="{{ url_for('create') }}" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Reel
+        </a>
+    </div>
+
+    <div class="table-card">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <td>#{{ job.id }}</td>
+                        <td>{{ job.description }}</td>
+                        <td><span class="badge badge-{{ job.status|lower }}">{{ job.status }}</span></td>
+                        <td>{{ job.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+        <div class="empty-icon">🎬</div>
+        <h3>No Reels Created Yet</h3>
+        <p>Generate your first AI-powered reel and it will appear here.</p>
+        <div class="empty-actions">
+            <a href="{{ url_for('create') }}" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Create Reel
+            </a>
+            <a href="{{ url_for('gallery') }}" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+                View Gallery
+            </a>
+        </div>
+    </div>
+
+    {% endif %}
+</main>
 
 </body>
 </html>
