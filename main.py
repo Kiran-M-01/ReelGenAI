@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import uuid
 from werkzeug.utils import secure_filename
 import os
@@ -48,9 +48,10 @@ def home():
 
 @app.route("/register", methods=["GET","POST"])
 def register():
+
     if request.method == "GET":
-        return render_template("register.html", error=None)
-    
+        return render_template("register.html")
+
     if request.method == "POST":
 
         username = request.form.get("username")
@@ -58,19 +59,24 @@ def register():
         password = request.form.get("password")
 
         if not username or not email or not password:
-            return "All fields are required"
+            flash("All fields are required.", "danger")
+            return redirect(url_for("register"))
 
         if get_user_by_username(username):
-            return render_template("register.html",error="Username already exists")
+            flash("Username already exists.", "danger")
+            return redirect(url_for("register"))
 
         if get_user_by_email(email):
-            return render_template("register.html",error="Email already registered")
+            flash("Email already registered.", "danger")
+            return redirect(url_for("register"))
 
         password_hash = generate_password_hash(password)
 
         create_user(username, email, password_hash)
-        return render_template("register.html", error="Registration Successful")
 
+        flash("Registration successful! Please login.", "success")
+        return redirect(url_for("login"))
+    
         # print(username)
         # print(email)
         # print(password_hash)
@@ -175,8 +181,23 @@ def create():
 
 @app.route("/gallery")
 def gallery():
-    reels = os.listdir("static/reels")
-    print(reels)
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    jobs = Job.query.filter_by(
+        user_id = session["user_id"]
+    ).all()
+
+    reels = []
+    for job in jobs:
+
+        filename = job.uuid + ".mp4"
+
+        if os.path.exists(os.path.join("static", "reels", filename)):
+            reels.append(filename)
+
+    
     return render_template("gallery.html", reels=reels)
 
 with app.app_context():
