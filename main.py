@@ -84,22 +84,27 @@ def register():
         # return "Recieved Successfully"
 
 
-@app.route("/login", methods = ["GET","POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
+
     if request.method == "GET":
-        return render_template('login.html', error=None)
-    
+        return render_template("login.html")
+
     if request.method == "POST":
+
         email = request.form.get("email")
         password = request.form.get("password")
 
         user = get_user_by_email(email)
+
         if user is None:
-            return render_template("login.html",error="Invalid Email")
-        
+            flash("Invalid email address.", "danger")
+            return redirect(url_for("login"))
+
         if not check_password_hash(user[3], password):
-            return render_template("login.html",error="Invalid Password")
-        
+            flash("Invalid password.", "danger")
+            return redirect(url_for("login"))
+
         session["user_id"] = user[0]
 
         return redirect(url_for("dashboard"))
@@ -247,9 +252,9 @@ def logout():
 
     session.pop("user_id", None)
 
-    return redirect(url_for("login"))
-    
+    flash("You have been logged out successfully.", "info")
 
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
