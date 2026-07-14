@@ -15,7 +15,8 @@ from auth_db import (
     create_users_table,
     create_user,
     get_user_by_email,
-    get_user_by_username
+    get_user_by_username,
+    get_user_by_id
 )
 
 
@@ -246,6 +247,16 @@ def dashboard():
 
     return render_template("dashboard.html", jobs=jobs)
 
+
+@app.route("/profile")
+def profile():
+
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    user = get_user_by_id(session["user_id"])
+
+    return render_template("profile.html", user=user)
 
 @app.route("/logout")
 def logout():
