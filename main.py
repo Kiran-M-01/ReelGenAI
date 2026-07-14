@@ -163,7 +163,7 @@ def create():
         
         for fl in input_files:
             with open(os.path.join(app.config['UPLOAD_FOLDER'], rec_id, "input.txt"), "a") as f:
-                f.write(f"file '{fl}'\nduration 1\n")
+                f.write(f"file '{fl}'\nduration 4\n")
 
 
 

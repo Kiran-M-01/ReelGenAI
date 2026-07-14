@@ -1,8 +1,0 @@
-file 'wp12541237.jpg'
-duration 1
-file 'wp3895884.jpg'
-duration 1
-file 'wp12541192.jpg'
-duration 1
-file 'wp12541174.jpg'
-duration 1
