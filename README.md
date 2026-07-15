@@ -1,236 +1,362 @@
-# ReelGenAI 🎬🤖
+# 🎬 ReelGenAI
 
-**ReelGenAI** is an AI-powered web application that automatically generates short-form vertical videos (Reels/Shorts) from images and text. Users can upload images, provide a script or description, and the system converts the text into speech, combines it with the uploaded images, and creates a ready-to-share video reel.
+> **AI-Powered Reel Generation Platform built with Flask, Python,
+> FFmpeg, and AI Text-to-Speech.**
 
-## Features ✨
+ReelGenAI is a full-stack AI-powered web application that automates the
+creation of vertical social media reels. Users can securely register,
+upload multiple images, enter a text description, and automatically
+generate AI-narrated videos optimized for Instagram Reels and YouTube
+Shorts.
 
-* Upload multiple images
-* Convert text descriptions into speech
-* Automatically generate vertical videos (1080×1920)
-* Instagram Reels and YouTube Shorts compatible
-* Gallery to view generated reels
-* Simple and lightweight Flask-based interface
-* Automated background processing using FFmpeg
+The application combines Flask, FFmpeg, AI Text-to-Speech, background
+processing, authentication, and media management into a complete
+SaaS-style platform.
 
----
+------------------------------------------------------------------------
 
-## Project Structure 📂
+# ✨ Features
 
-```text
+## 🔐 Authentication
+
+-   User Registration
+-   User Login
+-   Secure Password Hashing
+-   Session Management
+-   Protected Routes
+-   Logout
+-   Flash Messages
+
+## 🎬 Reel Generation
+
+-   Upload Multiple Images
+-   AI Text-to-Speech Narration
+-   Automatic Vertical Reel Generation (1080×1920)
+-   FFmpeg Video Rendering
+-   Background Processing Worker
+-   Automatic Image Format Conversion
+    -   JPG
+    -   JPEG
+    -   PNG
+    -   JFIF
+    -   WEBP
+
+## 📊 Dashboard
+
+-   User-specific Dashboard
+-   Total Jobs
+-   Completed Jobs
+-   Processing Jobs
+-   Queued Jobs
+-   Recent Reel Jobs
+-   Job Status Tracking
+
+## 🖼 Gallery
+
+-   User-specific Reel Gallery
+-   Responsive Video Cards
+-   Built-in Video Player
+-   Modern UI
+
+## 👤 Profile
+
+-   User Profile
+-   Username & Email
+-   Secure Account Access
+
+## 🎨 User Interface
+
+-   Responsive Landing Page
+-   Modern Dashboard
+-   Create Reel Page
+-   Gallery
+-   Profile
+-   Glassmorphism Design
+-   Mobile Friendly
+
+------------------------------------------------------------------------
+
+# 🚀 Tech Stack
+
+### Backend
+
+-   Python
+-   Flask
+
+### Database
+
+-   SQLite
+-   SQLAlchemy
+-   Raw SQL (Authentication)
+
+### Frontend
+
+-   HTML5
+-   CSS3
+-   JavaScript
+-   Jinja2
+
+### AI & Media Processing
+
+-   ElevenLabs Text-to-Speech API
+-   FFmpeg
+
+### Authentication
+
+-   Werkzeug Password Hashing
+-   Flask Sessions
+
+### Tools
+
+-   Git
+-   GitHub
+
+------------------------------------------------------------------------
+
+# 📂 Project Structure
+
+``` text
 ReelGenAI/
 │
 ├── static/
-│   ├── reels/              # Generated reel videos
-│   ├── uploads/            # Uploaded images
-│   └── css/
+│   ├── reels/
+│   ├── css/
+│   ├── js/
+│   └── images/
 │
 ├── templates/
-│   ├── index.html          # Upload page
-│   └── gallery.html        # Generated reels gallery
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   ├── create.html
+│   ├── gallery.html
+│   └── profile.html
 │
-├── user_uploads/           # Job folders for processing
-│
-├── main.py                 # Flask application
-├── generate_process.py     # Background reel generation worker
-├── text_to_audio.py        # Text-to-speech functionality
+├── user_uploads/
+├── auth_db.py
+├── database.py
+├── generate_process.py
+├── main.py
+├── models.py
+├── text_to_audio.py
 ├── requirements.txt
+├── done.txt
 └── README.md
 ```
 
----
+------------------------------------------------------------------------
 
-## How It Works ⚙️
+# ⚙️ Workflow
 
-```text
-User Uploads Images + Text
-            │
-            ▼
-      Flask Web App
-            │
-            ▼
-     Job Folder Created
-            │
-            ▼
-  Background Worker Detects Job
-            │
-            ▼
-     Text → Speech Conversion
-            │
-            ▼
-      Audio File Generated
-            │
-            ▼
- FFmpeg Combines Images + Audio
-            │
-            ▼
-      Reel Video Generated
-            │
-            ▼
-     Displayed in Gallery
+``` text
+Landing Page
+      │
+      ▼
+Register / Login
+      │
+      ▼
+Dashboard
+      │
+      ▼
+Create Reel
+      │
+      ▼
+Upload Images + Description
+      │
+      ▼
+Background Worker
+      │
+      ▼
+AI Voice Generation
+      │
+      ▼
+FFmpeg Video Rendering
+      │
+      ▼
+Gallery
 ```
 
----
+------------------------------------------------------------------------
 
-## Technologies Used 🛠️
+# 📷 Screenshots
 
-* Python
-* Flask
-* FFmpeg
-* HTML5
-* CSS3
-* Text-to-Speech (TTS)
-* JavaScript
+Add screenshots of:
 
----
+-   Landing Page
+-   Login
+-   Register
+-   Dashboard
+-   Create Reel
+-   Gallery
+-   Profile
 
-## Installation 🚀
+------------------------------------------------------------------------
 
-### 1. Clone the Repository
+# ⚡ Installation
 
-```bash
+``` bash
 git clone https://github.com/Kiran-M-01/ReelGenAI.git
 cd ReelGenAI
 ```
 
-### 2. Create Virtual Environment
+Create a virtual environment:
 
-```bash
+``` bash
 python -m venv venv
 ```
 
-Activate the environment:
+Activate it:
 
 **Windows**
 
-```bash
+``` bash
 venv\Scripts\activate
 ```
 
 **Linux/macOS**
 
-```bash
+``` bash
 source venv/bin/activate
 ```
 
-### 3. Install Dependencies
+Install dependencies:
 
-```bash
+``` bash
 pip install -r requirements.txt
 ```
 
-### 4. Install FFmpeg
+Install FFmpeg and ensure it is available in your system PATH.
 
-Make sure FFmpeg is installed and accessible from your system PATH.
+Verify:
 
-Check installation:
-
-```bash
+``` bash
 ffmpeg -version
 ```
 
----
+Add your ElevenLabs API key in your configuration file.
 
-## Running the Application ▶️
+------------------------------------------------------------------------
 
-### Start the Flask Server
+# ▶️ Running
 
-```bash
+Start Flask:
+
+``` bash
 python main.py
 ```
 
-### Start the Background Processing Worker
+Start the background worker in another terminal:
 
-Open a second terminal and run:
-
-```bash
+``` bash
 python generate_process.py
 ```
 
----
+------------------------------------------------------------------------
 
-## Usage 📸
+# 📝 Usage
 
-1. Open the application in your browser.
-2. Upload one or more images.
-3. Enter a text description or script.
-4. Submit the form.
-5. Wait for the processing worker to generate the reel.
-6. View the generated video in the gallery page.
+1.  Register an account.
+2.  Login.
+3.  Create a new reel.
+4.  Upload images.
+5.  Enter a description.
+6.  Submit.
+7.  Wait for processing.
+8.  View the generated reel in the Gallery.
 
----
+------------------------------------------------------------------------
 
-## Example Use Cases 💡
+# 📌 Current Features
 
-* Instagram Reels creation
-* YouTube Shorts generation
-* Marketing content
-* Educational videos
-* Storytelling videos
-* Product showcases
-* Social media automation
+-   ✅ Authentication
+-   ✅ Password Hashing
+-   ✅ Session Management
+-   ✅ User Dashboard
+-   ✅ User Gallery
+-   ✅ User Profile
+-   ✅ AI Voice Generation
+-   ✅ FFmpeg Rendering
+-   ✅ Background Processing
+-   ✅ Multiple Image Upload
+-   ✅ Automatic Image Conversion
+-   ✅ Responsive UI
 
----
+------------------------------------------------------------------------
 
-## Future Enhancements 🔮
+# 💡 Use Cases
 
-* AI-generated images
-* Multiple voice options
-* Background music support
-* Subtitle generation
-* User authentication
-* Cloud storage integration
-* Video templates
-* Real-time processing status
-* Docker deployment
-* Database support
+-   Instagram Reels
+-   YouTube Shorts
+-   Marketing Content
+-   Educational Videos
+-   Product Showcases
+-   Storytelling
+-   AI Content Creation
 
----
+------------------------------------------------------------------------
 
-## Known Limitations ⚠️
+# 🔮 Future Enhancements
 
-* Requires FFmpeg installation
-* Limited file validation
-* No user authentication
-* Processing status is not displayed in real time
-* Local file storage only
+-   Download Reel
+-   Delete Reel
+-   Reel Generation Time
+-   Multiple AI Voices
+-   Background Music
+-   Subtitle Generation
+-   Docker Deployment
+-   Cloud Storage
+-   Email Verification
+-   Admin Dashboard
 
----
+------------------------------------------------------------------------
 
-## Contributing 🤝
+# ⚠️ Known Limitations
 
-Contributions, bug reports, and feature requests are welcome.
+-   Requires FFmpeg installation.
+-   ElevenLabs API key required.
+-   Local storage is used for generated reels.
+-   Background processing is local.
 
-1. Fork the repository
-2. Create a feature branch
+------------------------------------------------------------------------
 
-```bash
+# 🤝 Contributing
+
+1.  Fork the repository.
+2.  Create a feature branch.
+
+``` bash
 git checkout -b feature-name
 ```
 
-3. Commit changes
+3.  Commit changes.
 
-```bash
+``` bash
 git commit -m "Add new feature"
 ```
 
-4. Push to GitHub
+4.  Push to GitHub.
 
-```bash
+``` bash
 git push origin feature-name
 ```
 
-5. Open a Pull Request
+5.  Open a Pull Request.
 
----
+------------------------------------------------------------------------
 
-## Author 👨‍💻
+# 👨‍💻 Author
 
 **Kiran M**
 
-GitHub: [https://github.com/Kiran-M-01](https://github.com/Kiran-M-01)
+GitHub: https://github.com/Kiran-M-01
 
----
+------------------------------------------------------------------------
 
-## License 📄
+# 📜 License
 
-This project is licensed under the MIT License. Feel free to use, modify, and distribute it for educational and personal projects.
+This project is licensed under the MIT License.
+
+------------------------------------------------------------------------
+
+⭐ If you like this project, consider giving it a star on GitHub!
