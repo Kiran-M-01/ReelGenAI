@@ -35,12 +35,19 @@ if __name__ == "__main__":
             if(folder not in done_folders):
                 print("Processing:", folder)
 
+                start = time.time()     # Start timer
+
                 try:
                     text_to_audio(folder)
                     create_reel(folder)
 
-                    # update database
-                    # add to done.txt
+                    end = time.time()    # End timer
+
+                    generation_time = round(end - start, 2)
+
+                    print("🎉 Reel generated successfully!")
+                    print(f"⏱ Generation Time: {generation_time} seconds")
+
 
                 except Exception as e:
                     print(f"Error processing {folder}: {e}")
