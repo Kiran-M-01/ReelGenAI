@@ -29,17 +29,19 @@ SaaS-style platform.
 
 ## 🎬 Reel Generation
 
--   Upload Multiple Images
--   AI Text-to-Speech Narration
--   Automatic Vertical Reel Generation (1080×1920)
--   FFmpeg Video Rendering
--   Background Processing Worker
--   Automatic Image Format Conversion
-    -   JPG
-    -   JPEG
-    -   PNG
-    -   JFIF
-    -   WEBP
+- Upload Multiple Images
+- AI Text-to-Speech Narration
+- Automatic Vertical Reel Generation (1080 × 1920)
+- FFmpeg Video Rendering
+- Background Processing Worker
+- Automatic Image Format Conversion
+  - JPG
+  - JPEG
+  - PNG
+  - JFIF
+  - WEBP
+- Automatic Image Timing Synchronization  (using mutagen package)
+- Dynamic Slideshow Generation Based on Narration Duration
 
 ## 📊 Dashboard
 
@@ -150,31 +152,46 @@ ReelGenAI/
 # ⚙️ Workflow
 
 ``` text
-Landing Page
-      │
-      ▼
-Register / Login
-      │
-      ▼
-Dashboard
-      │
-      ▼
-Create Reel
-      │
-      ▼
-Upload Images + Description
-      │
-      ▼
-Background Worker
-      │
-      ▼
-AI Voice Generation
-      │
-      ▼
-FFmpeg Video Rendering
-      │
-      ▼
-Gallery
+User Visits Landing Page
+            │
+            ▼
+      Register / Login
+            │
+            ▼
+        Dashboard
+            │
+            ▼
+      Create New Reel
+            │
+            ▼
+ Upload Images + Enter Description
+            │
+            ▼
+     Job Added to Queue
+            │
+            ▼
+ Background Worker Detects Job
+            │
+            ▼
+ AI Generates Voice Narration
+            │
+            ▼
+ Audio Duration Calculated
+            │
+            ▼
+ Image Duration Automatically Calculated
+            │
+            ▼
+ input.txt Generated Dynamically
+            │
+            ▼
+ FFmpeg Combines Images + Audio
+            │
+            ▼
+ High-Quality Vertical Reel Generated
+            │
+            ▼
+ Reel Stored in Gallery
 ```
 
 ------------------------------------------------------------------------
@@ -265,22 +282,49 @@ python generate_process.py
 7.  Wait for processing.
 8.  View the generated reel in the Gallery.
 
+
+# 🧠 Smart Reel Generation
+
+ReelGenAI automatically synchronizes uploaded images with the generated AI narration.
+
+After generating the narration:
+
+1. The application measures the narration duration.
+2. It calculates the optimal display time for each uploaded image.
+3. A dynamic `input.txt` file is generated automatically.
+4. FFmpeg combines the synchronized images and narration into a smooth vertical reel.
+
+### Example
+
+| Narration Duration | Images Uploaded | Display Time per Image |
+|-------------------:|----------------:|-----------------------:|
+| 20 sec | 10 | 2 sec |
+| 45 sec | 15 | 3 sec |
+| 60 sec | 20 | 3 sec |
+| 90 sec | 30 | 3 sec |
+
+This ensures every uploaded image is displayed while keeping the slideshow perfectly synchronized with the AI-generated narration.
+
 ------------------------------------------------------------------------
+
 
 # 📌 Current Features
 
--   ✅ Authentication
--   ✅ Password Hashing
--   ✅ Session Management
--   ✅ User Dashboard
--   ✅ User Gallery
--   ✅ User Profile
--   ✅ AI Voice Generation
--   ✅ FFmpeg Rendering
--   ✅ Background Processing
--   ✅ Multiple Image Upload
--   ✅ Automatic Image Conversion
--   ✅ Responsive UI
+- ✅ User Authentication
+- ✅ Password Hashing
+- ✅ Session Management
+- ✅ User Dashboard
+- ✅ User Gallery
+- ✅ User Profile
+- ✅ AI Voice Generation
+- ✅ Dynamic Image Timing
+- ✅ Automatic Narration Synchronization
+- ✅ FFmpeg Video Rendering
+- ✅ Background Processing
+- ✅ Multiple Image Upload
+- ✅ Automatic Image Format Conversion
+- ✅ Responsive UI
+- ✅ Secure Routes
 
 ------------------------------------------------------------------------
 
