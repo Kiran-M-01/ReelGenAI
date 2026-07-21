@@ -1,0 +1,15 @@
+file 'images.jpg'
+duration 1.09
+file 'images_2.jpg'
+duration 1.09
+file 'wp12541174.jpg'
+duration 1.09
+file 'wp12541181.jpg'
+duration 1.09
+file 'wp12541182.jpg'
+duration 1.09
+file 'wp12541183.jpg'
+duration 1.09
+file 'wp12541192.jpg'
+duration 1.09
+file 'wp12541192.jpg'
