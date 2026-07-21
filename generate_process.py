@@ -4,6 +4,8 @@ from text_to_audio import text_to_speech_file
 import time
 import subprocess
 
+
+
 def text_to_audio(folder):
     print("TTA - ",folder)
     with open(f"user_uploads/{folder}/desc.txt") as f:
@@ -11,10 +13,16 @@ def text_to_audio(folder):
     print(text, folder)
     text_to_speech_file(text, folder)
 
+
+
+
+
 def create_reel(folder):
     command = f'''ffmpeg -f concat -safe 0 -i user_uploads/{folder}/input.txt -i user_uploads/{folder}/audio.mp3 -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black" -c:v libx264 -c:a aac -shortest -r 30 -pix_fmt yuv420p static/reels/{folder}.mp4'''
     subprocess.run(command, shell=True, check=True)
     print("CR - ",folder)
+
+
 
 if __name__ == "__main__":
     while True:
@@ -38,8 +46,13 @@ if __name__ == "__main__":
                 start = time.time()     # Start timer
 
                 try:
+                    audio_start = time.time()
                     text_to_audio(folder)
+                    audio_end = time.time()
+
+                    video_start = time.time()
                     create_reel(folder)
+                    video_end = time.time()
 
                     end = time.time()    # End timer
 
@@ -47,6 +60,9 @@ if __name__ == "__main__":
 
                     print("🎉 Reel generated successfully!")
                     print(f"⏱ Generation Time: {generation_time} seconds")
+                    print(f"Audio : {audio_end-audio_start:.2f}s")
+                    print(f"Video : {video_end-video_start:.2f}s")
+                    print(f"Total : {video_end-audio_start:.2f}s")
 
 
                 except Exception as e:
