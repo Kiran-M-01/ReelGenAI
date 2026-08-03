@@ -1,0 +1,25 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables / secrets
+.env
+
+# User uploads
+user_uploads/
+
+# Generated reels
+static/reels/
+
+# Worker runtime state
+done.txt
+
+# Local databases
+*.db
+
+# OS files
+.DS_Store
+Thumbs.db

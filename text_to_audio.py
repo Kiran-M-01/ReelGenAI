@@ -1,57 +1,48 @@
-
 import os
-import uuid
-from dotenv import load_dotenv
-from elevenlabs import VoiceSettings
-from elevenlabs.client import ElevenLabs
-from config import ELEVENLABS_API_KEY
+import boto3
 
-load_dotenv()
 
-elevenlabs = ElevenLabs(
-    api_key=ELEVENLABS_API_KEY,
+# Create Amazon Polly client
+polly = boto3.client(
+    "polly",
+    region_name="eu-north-1"
 )
 
 
 def text_to_speech_file(text: str, folder: str) -> str:
-    # Calling the text_to_speech conversion API with detailed parameters
+
     try:
-        response = elevenlabs.text_to_speech.convert(
-            voice_id="pNInz6obpgDQGcFmaJgB",
-            output_format="mp3_22050_32",
-            text=text,
-            model_id="eleven_flash_v2_5",
-            voice_settings=VoiceSettings(
-                stability=0.0,
-                similarity_boost=1.0,
-                style=0.0,
-                use_speaker_boost=True,
-                speed=1.0,
-            ),
+        # Generate speech using Amazon Polly
+        response = polly.synthesize_speech(
+            Text=text,
+            OutputFormat="mp3",
+            VoiceId="Joanna",
+            Engine="standard"
         )
-        print(response)
-        
+
     except Exception as e:
-        print("\n========== ELEVENLABS ERROR ==========")
+        print("\n========== AMAZON POLLY ERROR ==========")
         print(e)
-        print("======================================\n")
-        return
+        print("========================================\n")
+        return None
 
-    # uncomment the line below to play the audio back
-    # play(response)
+    # Path where audio.mp3 will be stored
+    save_file_path = os.path.join(
+        "user_uploads",
+        folder,
+        "audio.mp3"
+    )
 
-    # Generating a unique file name for the output MP3 file
-    save_file_path = os.path.join(f"user_uploads/{folder}", "audio.mp3")
-
-    # Writing the audio to a file
+    # Save Polly audio stream to audio.mp3
     with open(save_file_path, "wb") as f:
-        for chunk in response:
-            if chunk:
-                f.write(chunk)
+        f.write(response["AudioStream"].read())
 
-    print(f"{save_file_path}: A new audio file was saved successfully!")
+    # Close the AWS response stream
+    response["AudioStream"].close()
 
-    # Return the path of the saved audio file
+    print(
+        f"{save_file_path}: Amazon Polly audio "
+        "generated successfully!"
+    )
+
     return save_file_path
-
-# text_to_speech_file("hi this is a sample audio for the project", "3ada90c7-47e9-11f1-acb4-8019346fdefb")
