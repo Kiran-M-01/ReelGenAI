@@ -16,7 +16,7 @@ def text_to_speech_file(text: str, folder: str) -> str:
         response = polly.synthesize_speech(
             Text=text,
             OutputFormat="mp3",
-            VoiceId="Joanna",
+            VoiceId="Matthew",
             Engine="standard"
         )
 
