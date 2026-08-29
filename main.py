@@ -11,16 +11,12 @@ from werkzeug.security import (
 
 from database import db
 from models import Job
-from auth_db import (
-    create_users_table,
-    create_user,
-    get_user_by_email,
-    get_user_by_username,
-    get_user_by_id
-)
+from auth_db import User
+from config import DATABASE_URL
 
 
 UPLOAD_FOLDER = 'user_uploads'
+
 ALLOWED_EXTENSIONS = {
     "png",
     "jpg",
@@ -29,14 +25,13 @@ ALLOWED_EXTENSIONS = {
     "webp"
 }
 
+
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-create_users_table()
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reelgen.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -47,42 +42,49 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/register", methods=["GET","POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "GET":
         return render_template("register.html")
 
-    if request.method == "POST":
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
+    if not username or not email or not password:
+        flash("All fields are required.", "danger")
+        return redirect(url_for("register"))
 
-        if not username or not email or not password:
-            flash("All fields are required.", "danger")
-            return redirect(url_for("register"))
+    existing_username = User.query.filter_by(
+        username=username
+    ).first()
 
-        if get_user_by_username(username):
-            flash("Username already exists.", "danger")
-            return redirect(url_for("register"))
+    if existing_username:
+        flash("Username already exists.", "danger")
+        return redirect(url_for("register"))
 
-        if get_user_by_email(email):
-            flash("Email already registered.", "danger")
-            return redirect(url_for("register"))
+    existing_email = User.query.filter_by(
+        email=email
+    ).first()
 
-        password_hash = generate_password_hash(password)
+    if existing_email:
+        flash("Email already registered.", "danger")
+        return redirect(url_for("register"))
 
-        create_user(username, email, password_hash)
+    password_hash = generate_password_hash(password)
 
-        flash("Registration successful! Please login.", "success")
-        return redirect(url_for("login"))
-    
-        # print(username)
-        # print(email)
-        # print(password_hash)
+    user = User(
+        username=username,
+        email=email,
+        password_hash=password_hash
+    )
 
-        # return "Recieved Successfully"
+    db.session.add(user)
+    db.session.commit()
+
+    flash("Registration successful! Please login.", "success")
+    return redirect(url_for("login"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -91,25 +93,22 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-    if request.method == "POST":
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-        email = request.form.get("email")
-        password = request.form.get("password")
+    user = User.query.filter_by(email=email).first()
 
-        user = get_user_by_email(email)
+    if user is None:
+        flash("Invalid email address.", "danger")
+        return redirect(url_for("login"))
 
-        if user is None:
-            flash("Invalid email address.", "danger")
-            return redirect(url_for("login"))
+    if not check_password_hash(user.password_hash, password):
+        flash("Invalid password.", "danger")
+        return redirect(url_for("login"))
 
-        if not check_password_hash(user[3], password):
-            flash("Invalid password.", "danger")
-            return redirect(url_for("login"))
+    session["user_id"] = user.id
 
-        session["user_id"] = user[0]
-
-        return redirect(url_for("dashboard"))
-
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/create", methods=["GET", "POST"])
@@ -253,8 +252,12 @@ def profile():
 
     if "user_id" not in session:
         return redirect(url_for("login"))
-    
-    user = get_user_by_id(session["user_id"])
+
+    user = db.session.get(User, session["user_id"])
+
+    if user is None:
+        session.pop("user_id", None)
+        return redirect(url_for("login"))
 
     return render_template("profile.html", user=user)
 

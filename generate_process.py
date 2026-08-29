@@ -6,6 +6,10 @@ import subprocess
 from mutagen.mp3 import MP3
 import traceback
 
+from models import Job
+from database import db
+from main import app
+
 
 
 def text_to_audio(folder):
@@ -14,7 +18,6 @@ def text_to_audio(folder):
         text = f.read()
     print(text, folder)
     text_to_speech_file(text, folder)
-
 
 
 
@@ -82,8 +85,15 @@ if __name__ == "__main__":
         for folder in folders:
             print("Checking:", folder)
 
-            if(folder not in done_folders):
+            if folder not in done_folders:
                 print("Processing:", folder)
+
+                with app.app_context():
+                    job = Job.query.filter_by(uuid=folder).first()
+
+                    if job:
+                        job.status = "processing"
+                        db.session.commit()
 
                 start = time.time()     # Start timer
 
@@ -125,8 +135,14 @@ if __name__ == "__main__":
 
 
                 except Exception as e:
-                    # print(f"Error processing {folder}: {e}")
                     traceback.print_exc()
+
+                    with app.app_context():
+                        job = Job.query.filter_by(uuid=folder).first()
+
+                        if job:
+                            job.status = "failed"
+                            db.session.commit()
                 
                 
         time.sleep(4)
