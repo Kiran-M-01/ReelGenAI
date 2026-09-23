@@ -1,0 +1,276 @@
+/* Shared black-and-white visual theme. Media keeps its original colors. */
+:root {
+    --primary-color: #000;
+    --secondary-color: #222;
+    --accent-color: #000;
+    --primary-color-rgb: 0, 0, 0;
+}
+
+html,
+body {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+body::before,
+body::after {
+    background: #fff !important;
+    box-shadow: none !important;
+    opacity: .04 !important;
+}
+
+body .create-bg .orb,
+body [class*="orb"],
+body [class*="glow"],
+body [class*="show-"] {
+    background: #fff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+body .create-bg,
+body .rg-page,
+body .rg-hero,
+body .rg-footer,
+body .rg-cta {
+    background: #000 !important;
+    background-image: none !important;
+    color: #fff !important;
+}
+
+nav,
+.navbar,
+header,
+footer {
+    background: #000 !important;
+    background-image: none !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+    accent-color: #000;
+}
+
+a,
+.nav-link,
+.navbar-brand,
+button,
+button:hover,
+a:hover,
+a:focus {
+    color: #fff !important;
+}
+
+button,
+.btn,
+.cta-button,
+.submit-btn,
+.add-file-btn,
+.btn-primary,
+.rg-btn-primary {
+    background: #000 !important;
+    background-image: none !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
+    box-shadow: none !important;
+}
+
+button:hover,
+.btn:hover,
+.cta-button:hover,
+.submit-btn:hover,
+.add-file-btn:hover,
+.btn-primary:hover,
+.rg-btn-primary:hover {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #000 !important;
+}
+
+.auth-form button[type="submit"] {
+    display: block !important;
+    visibility: visible !important;
+    background: #000 !important;
+    color: #fff !important;
+    border: 1px solid #000 !important;
+}
+
+.auth-form a,
+.auth-form a:visited {
+    color: #000 !important;
+}
+
+.auth-form a:hover,
+.auth-form a:focus {
+    color: #444 !important;
+}
+
+.auth-form .home-link {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-secondary,
+.rg-btn-secondary,
+.social-links a {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #000 !important;
+}
+
+.btn-secondary:hover,
+.rg-btn-secondary:hover {
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+main,
+.main-content,
+section,
+.hero-section,
+.features-section,
+.showcase-section,
+.upload-section,
+.gallery-container {
+    background: #000 !important;
+    background-image: none !important;
+    color: #fff !important;
+}
+
+.card,
+.feature-card,
+.upload-container,
+.reel-card,
+.info-row,
+.surface,
+.panel,
+.rg-card,
+.glass,
+.login-card,
+.register-card {
+    background: #fff !important;
+    background-image: none !important;
+    color: #000 !important;
+    border-color: #000 !important;
+    box-shadow: 0 8px 0 #fff, 0 0 0 1px #fff !important;
+    backdrop-filter: none !important;
+}
+
+.card h1,
+.card h2,
+.card h3,
+.card p,
+.card label,
+.card .value,
+.feature-card h1,
+.feature-card h2,
+.feature-card h3,
+.feature-card p,
+.upload-container h1,
+.upload-container h2,
+.upload-container h3,
+.upload-container p,
+.reel-info h3,
+.reel-info p {
+    color: #000 !important;
+}
+
+.avatar,
+.info-row i,
+.feature-icon,
+.hero-badge .dot,
+.eyebrow .dot {
+    background: #000 !important;
+    background-image: none !important;
+    color: #fff !important;
+    border-color: #000 !important;
+    box-shadow: none !important;
+}
+
+input,
+textarea,
+select,
+.text-input,
+.file-input,
+.dropzone {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #000 !important;
+}
+
+input::placeholder,
+textarea::placeholder,
+.upload-instructions,
+.subtitle,
+.info-row .label,
+.text-muted,
+.text-secondary {
+    color: #444 !important;
+}
+
+.dropzone .dz-message,
+.upload-title,
+.gallery-title,
+.feature-icon {
+    color: #000 !important;
+}
+
+.remove-file-btn {
+    background: #000 !important;
+    color: #fff !important;
+    border: 1px solid #fff !important;
+}
+
+.remove-file-btn:hover {
+    background: #fff !important;
+    color: #000 !important;
+}
+
+.play-overlay {
+    background: rgba(0, 0, 0, .72) !important;
+}
+
+.hero-title,
+.hero-subtitle,
+.showcase-title,
+.section-title,
+.rg-text-gradient,
+[class*="gradient"] {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: currentColor !important;
+    color: #fff !important;
+}
+
+.error,
+.alert-danger,
+.success,
+.alert-success,
+.warning,
+.alert-warning,
+.logout {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #000 !important;
+}
+
+hr,
+* {
+    border-color: #000;
+}
+
+img,
+video,
+canvas {
+    filter: none !important;
+}

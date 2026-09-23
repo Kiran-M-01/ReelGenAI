@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/monochrome.css') }}">
     <style>
         *, *::before, *::after { box-sizing: border-box; }
 
@@ -236,7 +237,7 @@
 </head>
 <body>
 
-    <form method="POST">
+    <form method="POST" class="auth-form">
 
         <h1>Create Account</h1>
 
@@ -273,6 +274,8 @@
         <button type="submit">Register</button>
 
         <p class="login-link">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
+        <a class="home-link" href="{{ url_for('home') }}">Back to Home</a>
 
     </form>
 
